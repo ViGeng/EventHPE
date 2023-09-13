@@ -1,0 +1,4 @@
+data_event/*
+event_pose_estimation/__pycache__/*
+smpl_model/*
+

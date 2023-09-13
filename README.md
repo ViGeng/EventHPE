@@ -32,6 +32,23 @@ basicModel_m_lbs_10_207_0_v1.0.0.pkl
 basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 ```
 
+
+```bash
+conda create --name myenv python=3.7.5
+conda activate myenv
+pip install torch==1.7.0 torchvision==0.8.1
+
+sudo apt-get install libcairo2-dev libglfw3-dev libgtest-dev
+pip install numpy Cython
+pip install opendr==0.78
+pip install opencv-python==4.1.1.26
+
+tar -xvf your_file.tar.gz # how to uncompress the provided data
+
+
+```
+
+
 ### Citation
 If you would like to use our code or dataset, please cite either
 ```

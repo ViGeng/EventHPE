@@ -563,9 +563,9 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu_id', type=str, default='0')
-    parser.add_argument('--data_dir', type=str, default='/home/shihao/data_event_out')
-    parser.add_argument('--save_dir', type=str, default='/home/shihao/data_event_out/ours_vibe_init')
-    parser.add_argument('--model_dir', type=str, default='/home/shihao/data_event_out/model/ours_gt.pkl')
+    parser.add_argument('--data_dir', type=str, default='../data_event/data_event_out')
+    parser.add_argument('--save_dir', type=str, default='../data_event/data_event_out/ours_vibe_init')
+    parser.add_argument('--model_dir', type=str, default='../data_event/data_event_out/model/ours_gt.pkl')
 
     parser.add_argument('--events_input_channel', type=int, default=8)
     parser.add_argument('--rnn_layers', type=int, default=1)
@@ -584,7 +584,8 @@ def get_args():
 
     parser.add_argument('--use_vibe_init', type=int, default=1)
     parser.add_argument('--use_hmr_init', type=int, default=0)
-    parser.add_argument('--smpl_dir', type=str, default='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')
+    # parser.add_argument('--smpl_dir', type=str, default='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')
+    parser.add_argument('--smpl_dir', type=str, default='/home/rowan/source/HPE/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl')
 
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--num_worker', type=int, default=4)
@@ -622,3 +623,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
