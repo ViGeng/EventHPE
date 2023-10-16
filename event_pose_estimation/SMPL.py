@@ -8,7 +8,6 @@
 import torch
 import pickle
 import sys
-sys.path.append('../')
 import numpy as np
 import torch.nn as nn
 from plyfile import PlyData, PlyElement

@@ -1,4 +1,6 @@
 import torch
+import trimesh
+import datetime
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import os
@@ -294,6 +296,8 @@ def test_simple_instance(args):
                     data['hidden_feats'][:, i]
                 )
 
+                
+
                 # get new init shape
                 tran = out['tran'][:, -1, :, :]  # [B, 1, 3]
                 theta = rotation_matrix_to_angle_axis(out['pred_rotmats'][:, -1, :, :, :].reshape(B*24, 3, 3))
@@ -311,7 +315,9 @@ def test_simple_instance(args):
             verts = torch.cat(verts, dim=1)
             joints3d = torch.cat(joints3d, dim=1)
             joints2d = torch.cat(joints2d, dim=1)
-            # print(trans.size(), verts.size(), joints3d.size(), joints2d.size())
+            print(trans.size(), verts.size(), joints3d.size(), joints2d.size())
+
+            vis(verts, results['faces'])
 
             mpjpe = compute_mpjpe(joints3d, data['joints3d'])  # [B, T, 24]
             pa_mpjpe = compute_pa_mpjpe(joints3d, data['joints3d'])  # [B, T, 24]
@@ -620,6 +626,19 @@ def main():
     #     if k is not 'info':
     #         print(k, v.size())
 
+def vis(batch_vertices, faces):
+    save_dir = "/home/rowan/source/HPE/EventHPE/data_event/vis"
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+    verts = batch_vertices.clone()
+    for i in range(batch_vertices.shape[0]): # batch
+        print(f"===========batch: {i}============")
+        for j in range(batch_vertices.shape[1]): # time step
+            verts = batch_vertices[i, j]
+            mesh = trimesh.Trimesh(vertices=verts, faces=faces)
+            filepath = f"{save_dir}/{datetime.datetime.now()}.obj"
+            mesh.export(filepath)
+            print(f"Saved mesh to {filepath}")
 
 if __name__ == '__main__':
     main()

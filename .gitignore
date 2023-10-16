@@ -1,3 +1,4 @@
 data_event/*
 event_pose_estimation/__pycache__/*
 
+*.pyc

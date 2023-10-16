@@ -1,4 +1,6 @@
 import torch
+import trimesh
+import pickle
 import torch.nn as nn
 import torch.nn.functional as func
 from torchvision.models import resnet50

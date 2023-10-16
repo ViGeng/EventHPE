@@ -1,17 +1,19 @@
 import os
+import sys
 import numpy as np
 import cv2
 from torch.utils.data import Dataset
 import pickle
 import joblib
 import torch
+sys.path.append("..")
 from flow_net.flowlib import flow_to_image
 
 
 class TrackingDataloader(Dataset):
     def __init__(
             self,
-            data_dir='/home/shihao/data_event',
+            data_dir='/home/rowan/source/HPE/EventHPE/data_event',
             max_steps=16,
             num_steps=8,
             skip=2,
@@ -228,7 +230,7 @@ class TrackingDataloader(Dataset):
 
         # '''
         from event_pose_estimation.SMPL import SMPL
-        model_dir = '../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl'
+        model_dir = '/home/rowan/source/HPE/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
         device = torch.device('cpu')
         smpl_male = SMPL(model_dir, 1).to(device)
 
@@ -304,7 +306,7 @@ class TrackingDataloader(Dataset):
 if __name__ == '__main__':
     os.environ['OMP_NUM_THREADS'] = '1'
     data_train = TrackingDataloader(
-        data_dir='/home/shihao/data_event_out',
+        data_dir='/home/rowan/source/HPE/EventHPE/data_event/data_event_out',
         max_steps=16,
         num_steps=8,
         skip=2,
