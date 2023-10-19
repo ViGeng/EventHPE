@@ -1,5 +1,4 @@
 import torch
-import trimesh
 import pickle
 import torch.nn as nn
 import torch.nn.functional as func
@@ -118,7 +117,7 @@ class EventTrackNet(nn.Module):
     def __init__(
             self,
             events_input_channel=8,
-            smpl_dir='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl',
+            smpl_dir='./smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl',
             batch_size=8,
             num_steps=8,
             n_layers=1,
@@ -130,7 +129,7 @@ class EventTrackNet(nn.Module):
             use_flow=True,
             vibe_regressor=False,
             cam_intr=None,
-            smpl_mean_params='../smpl_model/events_smpl_mean_params.npy'
+            smpl_mean_params='./smpl_model/events_smpl_mean_params.npy'
     ):
         super(EventTrackNet, self).__init__()
         self.cam_intr = cam_intr
@@ -226,7 +225,7 @@ if __name__ == '__main__':
     batch_size = 2
     model = EventTrackNet(
         events_input_channel=8,
-        smpl_dir='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl',
+        smpl_dir='smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl',
         batch_size=batch_size,
         num_steps=max_steps,
         n_layers=1,

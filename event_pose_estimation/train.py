@@ -68,9 +68,9 @@ def train(args):
     )
 
     if args.use_vibe_init or args.use_hmr_init:
-        smpl_dir = '../smpl_model/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
+        smpl_dir = 'smpl_model/basicModel_neutral_lbs_10_207_0_v1.0.0.pkl'
     else:
-        smpl_dir = '../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl'
+        smpl_dir = 'smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl'
     print('[smpl_dir] %s' % smpl_dir)
 
     # set model
@@ -355,7 +355,7 @@ def get_args():
     parser.add_argument('--result_dir', type=str, default='/home/shihao/exp_track')
     parser.add_argument('--log_dir', type=str, default='log')
     parser.add_argument('--model_dir', type=str, default=None)
-    parser.add_argument('--smpl_dir', type=str, default='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')
+    parser.add_argument('--smpl_dir', type=str, default='smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')
     parser.add_argument('--num_worker', type=int, default=4)
     parser.add_argument('--pin_memory', type=int, default=1)
     parser.add_argument('--use_amp', type=int, default=1)

@@ -230,7 +230,7 @@ class TrackingDataloader(Dataset):
 
         # '''
         from event_pose_estimation.SMPL import SMPL
-        model_dir = '/home/rowan/source/HPE/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
+        model_dir = '/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
         device = torch.device('cpu')
         smpl_male = SMPL(model_dir, 1).to(device)
 

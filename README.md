@@ -44,7 +44,7 @@ docker run --ipc=host --gpus all -dt --name eventHPE -v /home/rowan/dataset:/roo
 conda init bash
 conda create --name eventHPE python=3.7.5
 conda activate eventHPE
-
+pip install plyfile joblib
 pip install torch==1.7.0 torchvision==0.8.1 opencv-python==4.1.1.26 numpy Cython
 # pip install torch==1.7.0+cu110 torchvision==0.8.0+cu110 torchaudio==0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
 

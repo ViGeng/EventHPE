@@ -1,13 +1,11 @@
 from logging import Logger
-import pdb
+import joblib
 import torch
-import trimesh
 import datetime
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import os
 import time
-import joblib
 import cv2
 import pickle
 import sys
@@ -24,7 +22,7 @@ import numpy as np
 class TrackingTestDataloader(Dataset):
     def __init__(
             self,
-            data_dir='/home/shihao/data_event',
+            data_dir='/root/EventHPE/data_event',
             train_steps=8,
             test_steps=8,
             skip=2,
@@ -582,9 +580,9 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu_id', type=str, default='0')
-    parser.add_argument('--data_dir', type=str, default='../data_event/data_event_out')
-    parser.add_argument('--save_dir', type=str, default='../data_event/data_event_out/ours_vibe_init')
-    parser.add_argument('--model_dir', type=str, default='../data_event/data_event_out/model/ours_gt.pkl')
+    parser.add_argument('--data_dir', type=str, default='/root/EventHPE/data_event/data_event_out')
+    parser.add_argument('--save_dir', type=str, default='/root/EventHPE/data_event/data_event_out/ours_vibe_init')
+    parser.add_argument('--model_dir', type=str, default='/root/EventHPE/data_event/data_event_out/model/ours_gt.pkl')
 
     parser.add_argument('--events_input_channel', type=int, default=8)
     parser.add_argument('--rnn_layers', type=int, default=1)
@@ -603,8 +601,7 @@ def get_args():
 
     parser.add_argument('--use_vibe_init', type=int, default=1)
     parser.add_argument('--use_hmr_init', type=int, default=0)
-    # parser.add_argument('--smpl_dir', type=str, default='../smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')
-    parser.add_argument('--smpl_dir', type=str, default='/home/rowan/source/HPE/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl')
+    parser.add_argument('--smpl_dir', type=str, default='/root/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl')
 
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--num_worker', type=int, default=4)
