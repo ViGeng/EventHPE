@@ -32,7 +32,7 @@ basicModel_m_lbs_10_207_0_v1.0.0.pkl
 basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 ```
 
-### An Example environment setup
+#### An Example environment setup
 ```bash
 # tips when setup the environment
 conda create --name eventHPE python=3.7.5
@@ -55,18 +55,3 @@ tar -xf your_file.tar # how to uncompress the provided data
 
 pip install opendr-toolkit
 ```
-
-
-### Citation
-If you would like to use our code or dataset, please cite either
-```
-@inproceedings{zou2021eventhpe,  
-  title={EventHPE: Event-based 3D Human Pose and Shape Estimation},  
-  author={Zou, Shihao and Guo, Chuan and Zuo, Xinxin and Wang, Sen and Xiaoqin, Hu and Chen, Shoushun and Gong, Minglun and Cheng, Li},  
-  booktitle={Proceedings of the IEEE International Conference on Computer Vision},  
-  year={2021}  
-} 
-```
-
-## Our following work
-### Event-based Human Pose Tracking using Spiking Spatiotemporal Transformer [[project]](https://github.com/JimmyZou/HumanPoseTracking_SNN)
