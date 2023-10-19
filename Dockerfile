@@ -19,4 +19,4 @@ ENV PATH="/opt/miniconda/bin:$PATH"
 RUN conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
 
 # docker build -t wgeng/ubuntu18.04-cuda110-conda .
-# docker run --ipc=host --gpus all -dt --name eventHPE wgeng/ubuntu18.04-cuda110-conda
+# docker run --ipc=host --gpus all -dt --name eventHPE -v /home/rowan/dataset:/root/dataset wgeng/ubuntu18.04-cuda110-conda
