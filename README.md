@@ -32,18 +32,22 @@ basicModel_m_lbs_10_207_0_v1.0.0.pkl
 basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 ```
 
-### My environment setup
+### An Example environment setup
 ```bash
 # tips when setup the environment
 conda create --name eventHPE python=3.7.5
 conda activate eventHPE
+
 pip install torch==1.7.0 torchvision==0.8.1
+
+apt-get install build-essential
+apt-get install libgl1-mesa-dev
 
 sudo apt-get install libcairo2-dev libglfw3-dev libgtest-dev
 pip install numpy Cython
 
 sudo apt-get install libosmesa6-dev # run this before install opendr
-pip install opendr==0.78
+pip install opendr
 pip install opencv-python==4.1.1.26
 
 tar -xf your_file.tar # how to uncompress the provided data
