@@ -16,6 +16,8 @@ which consists of
   - model (train/test on a snippet of 8 frames)
 - raw events data (Please contact Shihao Zou szou2@ualberta.ca for the access.)
 
+> tar -xf your_file.tar # how to uncompress the provided data
+
 ### Requirements
 ```
 python 3.7.5
@@ -33,29 +35,20 @@ basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 ```
 
 #### An Example environment setup
+
 ```bash
-
-
-
+docker run --ipc=host --gpus all -dt --name eventHPE -v /home/rowan/dataset:/root/dataset wgeng/ubuntu18.04-cuda110-conda
+# enter the container
 
 # tips when setup the environment
+conda init bash
 conda create --name eventHPE python=3.7.5
 conda activate eventHPE
 
-pip install torch==1.7.0 torchvision==0.8.1
+pip install torch==1.7.0 torchvision==0.8.1 opencv-python==4.1.1.26 numpy Cython
+# pip install torch==1.7.0+cu110 torchvision==0.8.0+cu110 torchaudio==0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-apt-get install build-essential
-apt-get install libgl1-mesa-dev
-
-sudo apt-get install libcairo2-dev libglfw3-dev libgtest-dev
-pip install numpy Cython
-
-sudo apt-get install libosmesa6-dev # run this before install opendr
+apt-get install -y build-essential libglu1-mesa-dev libgl1-mesa-dev libcairo2-dev libglfw3-dev libgtest-dev libosmesa6-dev # run this before install opendr
 pip install opendr
-pip install opencv-python==4.1.1.26
-
-tar -xf your_file.tar # how to uncompress the provided data
-
-
 pip install opendr-toolkit
 ```
