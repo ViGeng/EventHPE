@@ -1,3 +1,5 @@
+from logging import Logger
+import pdb
 import torch
 import trimesh
 import datetime
@@ -276,7 +278,18 @@ def test_simple_instance(args):
     results['cam_intr'] = model.cam_intr
     with torch.set_grad_enabled(False):  # deactivate autograd to reduce memory usage
         for iter, data in enumerate(test_generator):
-            # data: {events, flows, init_shape, theta, tran, joints2d, joints3d, info}
+            '''
+            data: {
+                'events': [8, 8, 8, 256, 256],
+                'flows': [8, 8, 2, 256, 256],
+                'init_shape': [8, 1, 1, 85],
+                'hidden_feats': [8, 1, 2048],
+                'theta': [8, 8, 72],
+                'tran': [8, 8, 1, 3],
+                'joints2d': [8, 8, 24, 2],
+                'joints3d': [8, 8, 24, 3],
+            }
+            '''
             for k in data.keys():
                 if k != 'info':
                     data[k] = data[k].to(device=device, dtype=dtype)
@@ -317,7 +330,7 @@ def test_simple_instance(args):
             joints2d = torch.cat(joints2d, dim=1)
             print(trans.size(), verts.size(), joints3d.size(), joints2d.size())
 
-            vis(verts, results['faces'])
+            # vis(verts, results['faces']) # temporary visualization
 
             mpjpe = compute_mpjpe(joints3d, data['joints3d'])  # [B, T, 24]
             pa_mpjpe = compute_pa_mpjpe(joints3d, data['joints3d'])  # [B, T, 24]

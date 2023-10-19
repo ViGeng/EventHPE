@@ -13,7 +13,7 @@ from flow_net.flowlib import flow_to_image
 class TrackingDataloader(Dataset):
     def __init__(
             self,
-            data_dir='/home/rowan/source/HPE/EventHPE/data_event',
+            data_dir='data_event',
             max_steps=16,
             num_steps=8,
             skip=2,

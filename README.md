@@ -32,12 +32,11 @@ basicModel_m_lbs_10_207_0_v1.0.0.pkl
 basicModel_neutral_lbs_10_207_0_v1.0.0.pkl
 ```
 
-
 ### My environment setup
 ```bash
 # tips when setup the environment
-conda create --name myenv python=3.7.5
-conda activate myenv
+conda create --name eventHPE python=3.7.5
+conda activate eventHPE
 pip install torch==1.7.0 torchvision==0.8.1
 
 sudo apt-get install libcairo2-dev libglfw3-dev libgtest-dev
@@ -47,7 +46,10 @@ sudo apt-get install libosmesa6-dev # run this before install opendr
 pip install opendr==0.78
 pip install opencv-python==4.1.1.26
 
-tar -xvf your_file.tar.gz # how to uncompress the provided data
+tar -xf your_file.tar # how to uncompress the provided data
+
+
+pip install opendr-toolkit
 ```
 
 
