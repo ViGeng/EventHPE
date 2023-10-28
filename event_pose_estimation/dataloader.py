@@ -68,7 +68,8 @@ class TrackingDataloader(Dataset):
                     print('[hmr not exist] %s %i' % (action, frame_idx))
             self.all_clips = all_clips
 
-        print('[%s] %i clips, track%02i%02i.pkl' % (self.mode, len(self.all_clips), self.num_steps, self.skip))
+        print('[%s] %i clips, track%02i%02i.pkl' %
+              (self.mode, len(self.all_clips), self.num_steps, self.skip))
 
     def __len__(self):
         return len(self.all_clips)
@@ -78,9 +79,17 @@ class TrackingDataloader(Dataset):
         # TODO debug
         # action = 'subject02_group1_time1'
         # frame_idx = 1138
+
+        # this should be a data augmentation process
+        # next_frames_idx is the frame shift from frame_idx
         if self.mode == 'train':
-            next_frames_idx = self.skip * np.sort(np.random.choice(
-                np.arange(1, self.max_steps+1), self.num_steps, replace=False))
+            # Randomly generate num_steps indexes
+            # from the range of maximum number of steps.
+            next_frames_idx = self.skip * np.sort(
+                np.random.choice(np.arange(1, self.max_steps+1),
+                                 self.num_steps,
+                                 replace=False)
+            )
         else:
             # test
             next_frames_idx = self.skip * np.arange(1, self.num_steps+1)
@@ -98,13 +107,15 @@ class TrackingDataloader(Dataset):
             init_shape = np.concatenate([tran, theta, beta], axis=1)
         elif self.use_hmr_init:
             _, _, _params, _tran, _ = \
-                joblib.load('%s/hmr_results/%s/fullpic%04i_hmr.pkl' % (self.data_dir, action, frame_idx))
+                joblib.load('%s/hmr_results/%s/fullpic%04i_hmr.pkl' %
+                            (self.data_dir, action, frame_idx))
             theta = np.expand_dims(_params[3:75], axis=0)
             beta = np.expand_dims(_params[75:], axis=0)
             tran = _tran
             init_shape = np.concatenate([tran, theta, beta], axis=1)
         else:
-            beta, theta, tran, _, _ = joblib.load('%s/pose_events/%s/pose%04i.pkl' % (self.data_dir, action, frame_idx))
+            beta, theta, tran, _, _ = joblib.load(
+                '%s/pose_events/%s/pose%04i.pkl' % (self.data_dir, action, frame_idx))
             init_shape = np.concatenate([tran, theta, beta], axis=1)
 
         if self.use_hmr_feats:
@@ -113,7 +124,8 @@ class TrackingDataloader(Dataset):
         else:
             hmr_feats = np.zeros([2048])
 
-        events, flows, flows_rgb, theta_list, tran_list, joints2d_list, joints3d_list = [], [], [], [], [], [], []
+        events, flows, flows_rgb, theta_list, tran_list, joints2d_list, joints3d_list = [
+        ], [], [], [], [], [], []
         for i in range(self.num_steps):
             start_idx = sample_frames_idx[i]
             end_idx = sample_frames_idx[i+1]
@@ -124,7 +136,8 @@ class TrackingDataloader(Dataset):
             for j in range(start_idx, end_idx):
                 single_events_frame.append(cv2.imread(
                     '%s/events_%i/%s/event%04i.png' % (self.data_dir, self.img_size, action, j), -1))
-            single_events_frame = np.concatenate(single_events_frame, axis=2).astype(np.float32)  # [H, W, C]
+            single_events_frame = np.concatenate(
+                single_events_frame, axis=2).astype(np.float32)  # [H, W, C]
             # aggregate the events frame to get 8 channel
             if single_events_frame.shape[2] > self.events_input_channel:
                 skip = single_events_frame.shape[2] // self.events_input_channel
@@ -141,7 +154,8 @@ class TrackingDataloader(Dataset):
                     '%s/pred_flow_events_%i/%s/flow%04i.pkl' % (self.data_dir, self.img_size, action, j))
                     for j in range(start_idx, end_idx, self.skip)]  # flow is predicted with skip=2
                 # single flow is saved as int16 to save disk memory, [T, C, H, W]
-                single_flows = np.stack(single_flows, axis=0).astype(np.float32) / 100
+                single_flows = np.stack(
+                    single_flows, axis=0).astype(np.float32) / 100
                 single_flows = np.sum(single_flows, axis=0)
                 if self.use_flow_rgb:
                     single_flows_rgb = np.transpose(
@@ -165,59 +179,78 @@ class TrackingDataloader(Dataset):
         events = np.stack(events, axis=0)  # [T, H, W, 8]
         flows = np.stack(flows, axis=0)  # [T, 2/3, H, W]
         theta_list = np.stack(theta_list, axis=0)  # [T, 72]
-        tran_list = np.expand_dims(np.stack(tran_list, axis=0), axis=1)  # [T, 1, 3] in meter
+        tran_list = np.expand_dims(
+            np.stack(tran_list, axis=0), axis=1)  # [T, 1, 3] in meter
         # [T, 24, 2] drop d, normalize to 0-1
-        joints2d_list = np.stack(joints2d_list, axis=0)[:, :, 0:2] / self.img_size
-        joints3d_list = np.stack(joints3d_list, axis=0)  # [T, 24, 3] added trans
+        joints2d_list = np.stack(joints2d_list, axis=0)[
+            :, :, 0:2] / self.img_size
+        # [T, 24, 3] added trans
+        joints3d_list = np.stack(joints3d_list, axis=0)
 
         one_sample = {}
-        one_sample['events'] = torch.from_numpy(np.transpose(events, [0, 3, 1, 2])).float()  # [T, 8, H, W]
+        one_sample['events'] = torch.from_numpy(
+            np.transpose(events, [0, 3, 1, 2])).float()  # [T, 8, H, W]
         one_sample['flows'] = torch.from_numpy(flows).float()  # [T, 2, H, W]
-        one_sample['flows_rgb'] = torch.from_numpy(flows).float()  # [T, 3, H, W]
-        one_sample['init_shape'] = torch.from_numpy(init_shape).float()  # [1, 85]
-        one_sample['hidden_feats'] = torch.from_numpy(hmr_feats).float()  # [2048]
+        one_sample['flows_rgb'] = torch.from_numpy(
+            flows).float()  # [T, 3, H, W]
+        one_sample['init_shape'] = torch.from_numpy(
+            init_shape).float()  # [1, 85]
+        one_sample['hidden_feats'] = torch.from_numpy(
+            hmr_feats).float()  # [2048]
         one_sample['theta'] = torch.from_numpy(theta_list).float()  # [T, 72]
         one_sample['tran'] = torch.from_numpy(tran_list).float()  # [T, 1, 3]
-        one_sample['joints2d'] = torch.from_numpy(joints2d_list).float()  # [T, 24, 2]
-        one_sample['joints3d'] = torch.from_numpy(joints3d_list).float()  # [T, 24, 3]
+        one_sample['joints2d'] = torch.from_numpy(
+            joints2d_list).float()  # [T, 24, 2]
+        one_sample['joints3d'] = torch.from_numpy(
+            joints3d_list).float()  # [T, 24, 3]
         one_sample['info'] = [action, sample_frames_idx]
         return one_sample
 
     def obtain_all_clips(self):
         all_clips = []
-        tmp = sorted(os.listdir('%s/pose_events' % self.data_dir))
+        sorted_folder_names = sorted(
+            os.listdir('%s/pose_events' % self.data_dir))
+        '''
+        data_event/data_event_out/pose_events/
+        |-- subject01_group1_time1
+        |-- subject01_group1_time2
+        |-- subject01_group1_time3
+        '''
         action_names = []
-        for action in tmp:
+        for action in sorted_folder_names:
             subject = action.split('_')[0]
-            if self.mode == 'test':
+            # split the dataset into train and test, by subject
+            if self.mode == 'test':  # only test on subject 1, 2, 7
                 if subject in ['subject01', 'subject02', 'subject07']:
                     action_names.append(action)
-            else:
+            else:  # train on datasets other than subject 1, 2, 7
                 if subject not in ['subject01', 'subject02', 'subject07']:
                     action_names.append(action)
 
         for action in action_names:
             if not os.path.exists('%s/pose_events/%s/pose_info.pkl' % (self.data_dir, action)):
-                print('[warning] not exsit %s/pose_events/%s/pose_info.pkl' % (self.data_dir, action))
+                print('[warning] not exsit %s/pose_events/%s/pose_info.pkl' %
+                      (self.data_dir, action))
                 continue
-
-            frame_indices = joblib.load('%s/pose_events/%s/pose_info.pkl' % (self.data_dir, action))
+            frame_indices = joblib.load(
+                '%s/pose_events/%s/pose_info.pkl' % (self.data_dir, action))
             for i in range(len(frame_indices) - self.max_steps * self.skip):
                 frame_idx = frame_indices[i]
                 end_frame_idx = frame_idx + self.max_steps * self.skip
-                if not os.path.exists('%s/pred_flow_events_%i/%s/flow%04i.pkl' %
-                                      (self.data_dir, self.img_size, action, end_frame_idx)):
+                if not os.path.exists('%s/pred_flow_events_%i/%s/flow%04i.pkl' % (self.data_dir, self.img_size, action, end_frame_idx)):
                     # print('flow %i not exists for %s-%i' % (end_frame_idx, action, frame_idx))
                     continue
-                if not os.path.exists(
-                        '%s/hmr_results/%s/fullpic%04i_hmr.pkl' % (self.data_dir, action, frame_idx)):
+                if not os.path.exists('%s/hmr_results/%s/fullpic%04i_hmr.pkl' % (self.data_dir, action, frame_idx)):
                     continue
                 if end_frame_idx == frame_indices[i + self.max_steps * self.skip]:
                     # action, frame_idx
                     all_clips.append((action, frame_idx))
 
-        pickle.dump(all_clips, open('%s/%s_track%02i%02i.pkl' %
-                                    (self.data_dir, self.mode, self.num_steps, self.skip), 'wb'))
+        pickle.dump(
+            all_clips,
+            open('%s/%s_track%02i%02i.pkl' %
+                 (self.data_dir, self.mode, self.num_steps, self.skip), 'wb')
+        )
         return all_clips
 
     def visualize(self, idx):
@@ -230,7 +263,7 @@ class TrackingDataloader(Dataset):
 
         # '''
         from event_pose_estimation.SMPL import SMPL
-        model_dir = '/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
+        model_dir = '/root/EventHPE/smpl_model/basicmodel_m_lbs_10_207_0_v1.0.0.pkl'
         device = torch.device('cpu')
         smpl_male = SMPL(model_dir, 1).to(device)
 
@@ -306,16 +339,16 @@ class TrackingDataloader(Dataset):
 if __name__ == '__main__':
     os.environ['OMP_NUM_THREADS'] = '1'
     data_train = TrackingDataloader(
-        data_dir='/home/rowan/source/HPE/EventHPE/data_event/data_event_out',
+        data_dir='/root/EventHPE/data_event/data_event_out',
         max_steps=16,
         num_steps=8,
         skip=2,
         events_input_channel=8,
         img_size=256,
-        mode='train',
+        mode='test',
         use_hmr_feats=True
     )
-    # sample = data_train[10000]
+    sample = data_train[10000]
     data_train.visualize(20000)
     # print()
     # for k, v in sample.items():
@@ -341,4 +374,3 @@ if __name__ == '__main__':
     # for k, v in sample.items():
     #     if k != 'info':
     #         print(k, v.size())
-

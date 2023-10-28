@@ -12,7 +12,7 @@ from event_pose_estimation.dataloader import TrackingDataloader
 from event_pose_estimation.loss_funcs import compute_losses, compute_mpjpe, compute_pa_mpjpe, compute_pelvis_mpjpe
 import collections
 import numpy as np
-import event_pose_estimation.utils as util
+# import event_pose_estimation.utils as util # temporary
 
 
 def train(args):
@@ -325,9 +325,8 @@ def write_tensorboard(writer, results, epoch, progress, mode, args):
         dist = np.abs(np.mean(vert, axis=0)[2])
         # render_img = (util.render_model(vert, faces, args.img_size, args.img_size, cam_intr, np.zeros([3]),
         #                                 np.zeros([3]), near=0.1, far=20 + dist, img=img) * 255).astype(np.uint8)
-        render_img = util.render_model(vert, faces, args.img_size, args.img_size, cam_intr, np.zeros([3]),
-                                       np.zeros([3]), near=0.1, far=20 + dist, img=img)
-        render_imgs.append(render_img)
+        # render_img = util.render_model(vert, faces, args.img_size, args.img_size, cam_intr, np.zeros([3]), np.zeros([3]), near=0.1, far=20 + dist, img=img) # temporary
+        # render_imgs.append(render_img)
 
     fullpics = np.transpose(np.stack(fullpics, axis=0), [0, 3, 1, 2]) / 255.
     fullpics = np.concatenate([fullpics, fullpics, fullpics], axis=1)
@@ -351,8 +350,8 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu_id', type=str, default='0')
-    parser.add_argument('--data_dir', type=str, default='/home/shihao/data_event')
-    parser.add_argument('--result_dir', type=str, default='/home/shihao/exp_track')
+    parser.add_argument('--data_dir', type=str, default='/root/EventHPE/data_event')
+    parser.add_argument('--result_dir', type=str, default='/root/EventHPE/exp_track')
     parser.add_argument('--log_dir', type=str, default='log')
     parser.add_argument('--model_dir', type=str, default=None)
     parser.add_argument('--smpl_dir', type=str, default='smpl_model/basicModel_m_lbs_10_207_0_v1.0.0.pkl')

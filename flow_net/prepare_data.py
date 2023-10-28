@@ -217,7 +217,7 @@ def prepare_color(data_dir, target_dir, image_size):
 
 if __name__ == '__main__':
     data_dir = '/data/shihao/data_event'
-    target_dir = '/home/shihao/data_event/'
+    target_dir = '/root/EventHPE/data_event'
     # prepare_full_pic(data_dir, target_dir, image_size=512)
     # prepare_event_frame(data_dir, target_dir, image_size=512, num_cpus=4)
     # count_events(target_dir, new=True)
